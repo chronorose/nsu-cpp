@@ -1,4 +1,5 @@
 #include <iostream>
+#include <optional>
 
 using namespace std;
 
@@ -32,11 +33,10 @@ class Line {
         this->B = B;
         this->C = C;
     }
-    Point intersection(Line& ln2) const {
+    optional<Point> intersection(Line& ln2) const {
         double det = this->A * ln2.B - ln2.A * this->B;
         if (det == 0) {
-            std :: cout << "they do not intersect or someth"; 
-            return Point(0, 0);
+            return {};
         } else {
             double detdiv = 1. / det;
             double x = detdiv * ((this->B * ln2.C) - (this->C * ln2.B));
@@ -56,6 +56,8 @@ class Line {
         return ln;
     }
 };
+// TODO: do equality operator for lines for tests; do tests;
+// do intersection for non-intersecting shiet
 
 ostream& operator<<(ostream& os, Line& ln) {
     cout << ln.A << " " << ln.B << " " << ln.C << endl;    
