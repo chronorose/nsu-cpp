@@ -1,45 +1,47 @@
 #include <iostream>
 
-typedef char byte;
+using namespace std;
 
-
-template<typename T> class AVLNode; 
-
-template<typename T> class AVLTree {
-    AVLNode<T>* root;
-    public:
-    AVLTree<T>() {
-        this->root = nullptr;
-    }
-    void insert(T data) {
-        AVLNode<T>* node = new AVLNode<T>(data);
-        if(this->root == nullptr) {
-            this->root = node;
-        } else if(data < this->root->data) {
-            this->root->left = insertNode(data, node, this->root->left);
-        } else if(data > this->root->data) {
-            this->root->right = insertNode(data, node, this->root->right);
+class AVLTree {
+    struct Node {
+        int data;
+        Node* left = nullptr;
+        Node* right = nullptr;
+        char balance;
+        Node(int data) {
+            this->data = data;
+            this->balance = 0;
         }
-    }
-    AVLNode<T>* insertNode(T data, AVLNode<T>* to_insert, AVLNode<T>* old) {
-        
-    }
-};
+    };
 
-template<typename T> class AVLNode {
-    byte balance;
+    Node* root = nullptr;
+
+    char balance(Node* node) {
+        return node == nullptr ? -1 : node->balance;
+    }
+
+    Node* insert(int data, Node* node) {
+        if(node == NULL) {
+            return new Node(data);
+        } else if (data < node->data) {
+            node->left = insert(data, node->left);
+        } else if (data > node->data) {
+            node->right = insert(data, node->right);
+        }
+        return node;
+    }
+
+    Node* rightRotate(Node* node) {
+        Node* left = node->left;
+        node->left = left->right;
+        left->right = node;
+        node->balance = max(balance(node->left), balance(node->right)) + 1;
+        leftl->balance = max(balance(left->left), balance(node->balance)) + 1;
+
+    }    
+
     public:
-    T data; 
-    AVLNode* left;
-    AVLNode* right;
-    AVLNode<T>(T data) {
-        this->data = data;
-        this->left = nullptr;
-        this->right = nullptr;
-        this->balance = 1;
+    void insert(int data) {
+        this->root = insert(data, this->root);
     }
-};
-
-int main() {
-    return 0;
 }
