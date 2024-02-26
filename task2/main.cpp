@@ -70,7 +70,6 @@ class Line {
         return false;
     }
 };
-// TODO: do equality operator for lines for tests; do tests;
 
 ostream& operator<<(ostream& os, Line& ln) {
     cout << ln.A << " " << ln.B << " " << ln.C << endl;    
