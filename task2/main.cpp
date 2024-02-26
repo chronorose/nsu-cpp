@@ -3,12 +3,20 @@
 
 using namespace std;
 
+#define IS_TRUE(x) { if (!(x)) cout << "function: " <<  __FUNCTION__ << " failed on line " << __LINE__ << endl; }
+
 struct Point {
     double x;
     double y;
     Point(double x, double y) {
         this->x = x;
         this->y = y;
+    }
+    bool operator==(Point point) {
+        if(point.x == this->x && point.y == this->y) {
+            return true;
+        }
+        return false;
     }
 };
 
@@ -55,22 +63,46 @@ class Line {
         Line ln(newA, newB, newC);
         return ln;
     }
+    bool operator==(Line ln) {
+        if (this->A == ln.A && this->B == ln.B && this->C == ln.C) {
+            return true;
+        }
+        return false;
+    }
 };
 // TODO: do equality operator for lines for tests; do tests;
-// do intersection for non-intersecting shiet
 
 ostream& operator<<(ostream& os, Line& ln) {
     cout << ln.A << " " << ln.B << " " << ln.C << endl;    
     return os;
 }
 
+Line fastPerpendTest(double A, double B, double C, double x, double y) {
+    Line ln(A, B, C);
+    Point p(x, y);
+    return ln.perpendicular(p);
+}
+
+optional<Point> fastIntersectTest(double A1, double B1, double C1, 
+                                  double A2, double B2, double C2) {
+    Line ln1(A1, B1, C1);
+    Line ln2(A2, B2, C2);
+    return ln1.intersection(ln2);
+}
+
+void tests() {
+    IS_TRUE(fastPerpendTest(2, -1, 5, 4, -3) == Line(1, 2, 2));
+    IS_TRUE(fastPerpendTest(1, 2, 3, 1, 2) == Line(2, -1, 0));
+    IS_TRUE(fastPerpendTest(1, 4, 3, 1, 2) == Line(4, -1, -2));
+    IS_TRUE(fastPerpendTest(1, 4, 300, 1, 2) == Line(4, -1, -2));
+    IS_TRUE(*fastIntersectTest(1, 2, 3, 4, 5, 6) == Point(1, -2));
+    IS_TRUE(*fastIntersectTest(1, 2, 3, 4, 5, 6) == Point(1, -2));
+    IS_TRUE(*fastIntersectTest(1, 2, 3, 4, 5, 6) == Point(1, -2));
+    IS_TRUE(*fastIntersectTest(1, 1, 2, 5, 6, 7) == Point(-5, 3));
+}
+
 
 int main() {
-    Line ln1(2, -1, 5);
-    Point p(4, -3);
-    
-    // Line ln2(3, 4, 5);
-    // Point a = ln1.intersection(ln2);
-    Line ln = ln1.perpendicular(p);
-    std::cout << ln;
+    tests();
+    return 0;
 }
