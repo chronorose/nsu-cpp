@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <cassert>
 
 using namespace std;
 
@@ -93,13 +95,12 @@ class FHeap {
             node = merge_(node->next, node->child);
         }
         if (node == nullptr) return nullptr;
-        Node** trees = new Node*[node->degree + 1];
-
+        vector<Node*>* trees = new vector<Node*>(node->degree + 4);
         while (true) {
-            if (trees[node->degree] != nullptr) {
-                Node* n = trees[node->degree];
+            if (trees->at(node->degree) != nullptr) {
+                Node* n = trees->at(node->degree);
                 if (node == n) break;
-                trees[node->degree] = nullptr;
+                trees->at(node->degree) = nullptr;
                 if (node->value < n->value) {
                     n->prev->next = n->next;
                     n->next->prev = n->prev;
@@ -122,7 +123,7 @@ class FHeap {
                 }
                 continue;
             } else {
-                trees[node->degree] = node;
+                trees->at(node->degree) = node;
             }
             node = node->next;
         }
@@ -133,7 +134,7 @@ class FHeap {
                 min = node;
             node = node->next;
         } while (node != start);
-        delete[] trees;
+        delete trees;
         return min;
     }
 
@@ -214,9 +215,10 @@ class FHeap {
             displayTree(holder);
             holder = holder->next;
         } while(holder != heap);
+        cout << endl;
     }
     void displayTree(Node* node) {
-        cout << "-> ( "<< node->value;
+        cout << " -> ("<< node->value;
         if (node->child != nullptr) {
             Node* holder = node->child;
             do {
@@ -225,7 +227,7 @@ class FHeap {
                 holder = holder->next;
             } while (holder != node->child);
         }
-        cout << " ) ";
+        cout << ")";
     }
 };
 
@@ -241,11 +243,11 @@ void tests() {
     heap.insert(37);
     heap.insert(39);
     heap.display();
-    heap.removeMin();
+    assert(heap.removeMin() == 5);
     heap.display();
-    heap.removeMin();
+    assert(heap.removeMin() == 13);
     heap.display();
-    heap.removeMin();
+    assert(heap.removeMin() == 14);
     heap.display();
 }
 
