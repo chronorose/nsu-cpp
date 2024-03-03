@@ -13,13 +13,8 @@ class Node {
     int degree;
     bool marked;
     public:
-    Node(int value) {
-        this->value = value;
-        this->marked = false;
-        this->degree = 0;
-        this->child = nullptr;
-        this->parent = nullptr;
-    }
+    Node(int value): value(value), marked(false), degree(0), child(nullptr), parent(nullptr) {}
+    Node(const Node& other): value(other.value), marked(other.marked), degree(other.degree), child(nullptr), parent(nullptr) {}
     friend class FHeap;
 };
 
@@ -175,12 +170,45 @@ class FHeap {
         return heap;
     }
 
+    Node* copyTree(Node* node, Node* parent = nullptr) {
+        if (node) {
+            Node* holder = node;
+            Node* newNode = new Node(*holder);                
+            Node* originalNew = newNode;
+            newNode->parent = parent;
+            newNode->next = newNode;
+            newNode->prev = newNode;
+            newNode->child = copyTree(holder->child, newNode);
+            holder = holder->next;
+            while (holder != node) {
+                Node* sibNode = new Node(*holder);
+                sibNode->parent = parent;
+                sibNode->prev = newNode;
+                newNode->next = sibNode;
+                sibNode->next = newNode->prev;
+                sibNode->child = nullptr;
+                sibNode->child = copyTree(holder->child, sibNode);
+                newNode = sibNode;
+                holder = holder->next;
+            }
+            newNode->next = originalNew;
+            originalNew->prev = newNode;
+            return originalNew;
+        }
+        return nullptr;
+    }
+
     public:
     FHeap() {
         this->heap = nullptr;    
     }
     ~FHeap() {
         deleteHeap(this->heap);
+    }
+    FHeap& operator=(const FHeap& other) {
+        this->deleteHeap(this->heap);
+        this->heap = copyTree(other.heap);
+        return *this;
     }
     int getMin() {
         return this->heap->value;
@@ -233,6 +261,7 @@ class FHeap {
 
 void tests() {
     FHeap heap;
+    FHeap heap2;
     heap.insert(32);
     heap.insert(14);
     heap.insert(13);
@@ -243,12 +272,14 @@ void tests() {
     heap.insert(37);
     heap.insert(39);
     heap.display();
+    heap2 = heap;
     assert(heap.removeMin() == 5);
     heap.display();
     assert(heap.removeMin() == 13);
     heap.display();
     assert(heap.removeMin() == 14);
     heap.display();
+    heap2.display();
 }
 
 int main() {
