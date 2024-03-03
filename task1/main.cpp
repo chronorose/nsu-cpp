@@ -13,8 +13,14 @@ class Node {
     int degree;
     bool marked;
     public:
-    Node(int value): value(value), marked(false), degree(0), child(nullptr), parent(nullptr) {}
-    Node(const Node& other): value(other.value), marked(other.marked), degree(other.degree), child(nullptr), parent(nullptr) {}
+    Node(int value): value(value), marked(false), degree(0), child(nullptr), parent(nullptr) {
+        this->next = this;
+        this->prev = this;
+    }
+    Node(const Node& other): value(other.value), marked(other.marked), degree(other.degree), child(nullptr), parent(nullptr) {
+        this->next = this;
+        this->prev = this;
+    }
     friend class FHeap;
 };
 
@@ -276,6 +282,9 @@ void tests() {
     heap.display();
     FHeap heap2 = heap;
     assert(heap.removeMin() == 5);
+    FHeap heap3;
+    heap3 = heap;
+    heap3.display();
     heap.display();
     assert(heap.removeMin() == 13);
     heap.display();
