@@ -3,4 +3,5 @@ rm := rm -f
 build := build/
 
 %:
-	$(CC) task$@/*.cpp -o $(build)/task$@
+	$(CC) task$@/*.cpp -o $(build)task$@
+	./$(build)task$@
