@@ -205,9 +205,7 @@ class FHeap {
     }
 
     public:
-    FHeap() {
-        this->heap = nullptr;    
-    }
+    FHeap(): heap(nullptr) {}
     ~FHeap() {
         deleteHeap(this->heap);
     }
@@ -216,9 +214,7 @@ class FHeap {
         this->heap = copyTree(other.heap);
         return *this;
     }
-    FHeap(const FHeap& other) {
-        this->heap = copyTree(other.heap);
-    }
+    FHeap(const FHeap& other): heap(copyTree(other.heap)) {}
     int getMin() {
         return this->heap->value;
     }
