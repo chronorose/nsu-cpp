@@ -210,6 +210,9 @@ class FHeap {
         this->heap = copyTree(other.heap);
         return *this;
     }
+    FHeap(const FHeap& other) {
+        this->heap = copyTree(other.heap);
+    }
     int getMin() {
         return this->heap->value;
     }
@@ -261,7 +264,6 @@ class FHeap {
 
 void tests() {
     FHeap heap;
-    FHeap heap2;
     heap.insert(32);
     heap.insert(14);
     heap.insert(13);
@@ -272,7 +274,7 @@ void tests() {
     heap.insert(37);
     heap.insert(39);
     heap.display();
-    heap2 = heap;
+    FHeap heap2 = heap;
     assert(heap.removeMin() == 5);
     heap.display();
     assert(heap.removeMin() == 13);
