@@ -27,12 +27,6 @@ class Node {
 class FHeap {
     Node* heap;
 
-    Node* singleton(int value) {
-        Node* node = new Node(value);
-        node->next = node->prev = node;
-        return node;
-    }
-
     Node* merge_(Node* n1, Node* n2) {
         if (n1 == nullptr) return n2;
         if (n2 == nullptr) return n1;
@@ -52,7 +46,7 @@ class FHeap {
     }
 
     Node* insert_(int value) {
-        Node* ret = singleton(value);   
+        Node* ret = new Node(value);   
         heap = merge_(heap, ret);
         return ret;
     }
@@ -214,12 +208,26 @@ class FHeap {
         this->heap = copyTree(other.heap);
         return *this;
     }
+    FHeap& operator=(FHeap&& other) {
+        cout << "move assignment" << endl;
+        if (this != &other) {
+            deleteHeap(this->heap);
+            this->heap = other.heap;
+            other.heap = nullptr;
+        }
+        return *this;
+    }
+    FHeap(FHeap&& other) {
+        cout << "move constructor" << endl;
+        this->heap = other.heap;
+        other.heap = nullptr;
+    }
     FHeap(const FHeap& other): heap(copyTree(other.heap)) {}
     int getMin() {
         return this->heap->value;
     }
     Node* insert(int value) {
-        Node* ret = singleton(value);        
+        Node* ret = new Node(value);        
         this->heap = merge_(this->heap, ret);
         return ret;
     }
@@ -264,28 +272,41 @@ class FHeap {
     }
 };
 
+void swapFHeaps(FHeap& fh1, FHeap& fh2) {
+    FHeap tmp = move(fh1);
+    fh1 = move(fh2);
+    fh2 = move(tmp);
+}
+
+
 void tests() {
-    FHeap heap;
-    heap.insert(32);
-    heap.insert(14);
-    heap.insert(13);
-    heap.insert(21);
-    heap.insert(121);
-    heap.insert(5);
-    heap.insert(33);
-    heap.insert(37);
-    heap.insert(39);
-    heap.display();
-    FHeap heap2 = heap;
-    assert(heap.removeMin() == 5);
+    FHeap* heap = new FHeap;
+    heap->insert(32);
+    heap->insert(14);
+    heap->insert(13);
+    heap->insert(21);
+    heap->insert(121);
+    heap->insert(5);
+    heap->insert(33);
+    heap->insert(37);
+    heap->insert(39);
+    heap->display();
+    FHeap heap2 = *heap;
+    assert(heap->removeMin() == 5);
     FHeap heap3;
-    heap3 = heap;
+    heap3 = *heap;
+    cout << "heap 3" << endl;
     heap3.display();
-    heap.display();
-    assert(heap.removeMin() == 13);
-    heap.display();
-    assert(heap.removeMin() == 14);
-    heap.display();
+    delete heap;
+    assert(heap3.removeMin() == 13);
+    assert(heap2.getMin() == 5);
+    swapFHeaps(heap2, heap3);
+    assert(heap2.getMin() == 14);
+    // heap.display();
+    // assert(heap.removeMin() == 13);
+    // heap.display();
+    // assert(heap.removeMin() == 14);
+    // heap.display();
     heap2.display();
 }
 
