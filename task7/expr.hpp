@@ -38,12 +38,14 @@ struct Add: public Binary {
         return new Add(left->clone(), right->clone());
     }
     Expression* diff(std::string var) {
-        return new Add(left->clone()->diff(var), right->clone()->diff(var));
+        return new Add(left->diff(var), right->diff(var));
     }
     void print() {
+        cout << "(";
         left->print();
         cout << " + ";
         right->print();
+        cout << ")";
     }
 };
 
@@ -53,12 +55,14 @@ struct Sub: public Binary {
         return new Sub(left->clone(), right->clone());
     }
     Expression* diff(std::string var) {
-        return new Sub(left->clone()->diff(var), right->clone()->diff(var));
+        return new Sub(left->diff(var), right->diff(var));
     }
     void print() {
+        cout << "(";
         left->print();
         cout << " - ";
         right->print();
+        cout << ")";
     }
 };
 
@@ -68,12 +72,14 @@ struct Mult: public Binary {
         return new Mult(left->clone(), right->clone());
     }
     Expression* diff(std::string var) {
-        return new Add(new Mult(left->clone()->diff(var), right->clone()), new Mult(left->clone(), right->clone()->diff(var)));
+        return new Add(new Mult(left->diff(var), right->clone()), new Mult(left->clone(), right->diff(var)));
     }
     void print() {
+        cout << "(";
         left->print();
         cout << " * ";
         right->print();
+        cout << ")";
     }
 };
 
@@ -83,24 +89,26 @@ struct Div: public Binary {
         return new Div(left->clone(), right->clone());
     }
     Expression* diff(std::string var) {
-        Expression* top = new Sub(new Mult(left->clone()->diff(var), right->clone()), new Mult(left->clone(), right->clone()->diff(var)));
+        Expression* top = new Sub(new Mult(left->diff(var), right->clone()), new Mult(left->clone(), right->diff(var)));
         Expression* bottom = new Mult(right->clone(), right->clone());
         return new Div(top, bottom);
     }
     void print() {
+        cout << "(";
         left->print();
         cout << " / ";
         right->print();
+        cout << ")";
     }
 };
 
 struct Exponent: public Unary {
     Exponent(Expression* expr): Unary(expr) {}
     Expression* clone() {
-        return new Exponent(expr->clone());
+        return new Exponent(expr);
     }
     Expression* diff(std::string var) {
-        return new Mult(new Exponent(expr->clone()), expr->clone()->diff(var));
+        return new Mult(new Exponent(expr->clone()), expr->diff(var));
     }
     void print() {
         cout << "exp(";
