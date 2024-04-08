@@ -14,12 +14,12 @@ class Node {
     bool marked;
     public:
     Node(int value): value(value), marked(false), degree(0), child(nullptr), parent(nullptr) {
-        this->next = this;
-        this->prev = this;
+        this->next = nullptr;
+        this->prev = nullptr;
     }
     Node(const Node& other): value(other.value), marked(other.marked), degree(other.degree), child(nullptr), parent(nullptr) {
-        this->next = this;
-        this->prev = this;
+        this->next = nullptr;
+        this->prev = nullptr;
     }
     friend class FHeap;
 };
