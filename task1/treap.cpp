@@ -7,26 +7,18 @@
 
 using std::optional, std::pair, std::rand;
 
-template <std::integral T, typename U> class Treap;
-
-template <std::integral T, typename U> class Node {
-  using NodeT = Node<T, U>;
-  T key;
-  size_t prio;
-  U elem;
-  Node* left;
-  Node* right;
-
-public:
-  Node(T key, U elem) : key(key), elem(elem), left(nullptr), right(nullptr) {
-    prio = rand();
-  }
-
-  friend class Treap<T, U>; // костыль, исправлю позже.
-};
-
 template <std::integral T, typename U> class Treap {
-  using NodeT = Node<T, U>;
+  struct Node {
+    T key;
+    size_t prio;
+    U elem;
+    Node* left;
+    Node* right;
+    Node(T key, U elem) : key(key), elem(elem), left(nullptr), right(nullptr) {
+      prio = rand();
+    }
+  };
+  using NodeT = Node;
   NodeT* root;
 
   pair<NodeT*, NodeT*> split(NodeT* t, T k) {
