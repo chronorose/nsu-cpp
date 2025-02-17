@@ -1,5 +1,7 @@
+#pragma once
 #include <concepts>
 #include <cstdlib>
+#include <functional>
 #include <iostream>
 #include <optional>
 #include <ostream>
@@ -7,7 +9,7 @@
 
 using std::optional, std::pair, std::rand;
 
-template <std::integral T, typename U> class Treap {
+template <std::integral T, std::copyable U> class Treap {
   struct Node {
     T key;
     size_t prio;
@@ -19,6 +21,7 @@ template <std::integral T, typename U> class Treap {
     }
   };
   using NodeT = Node;
+  using OptionU = optional<std::reference_wrapper<U>>;
   NodeT* root;
 
   pair<NodeT*, NodeT*> split(NodeT* t, T k) {
@@ -49,14 +52,6 @@ template <std::integral T, typename U> class Treap {
     return t2;
   }
 
-  void rec_print(NodeT* node) {
-    if (node == nullptr)
-      return;
-    rec_print(node->left);
-    std::cout << node->key << " " << node->elem << std::endl;
-    rec_print(node->right);
-  }
-
   void rec_delete(NodeT* node) {
     if (node == nullptr)
       return;
@@ -67,7 +62,22 @@ template <std::integral T, typename U> class Treap {
 
 public:
   Treap() { root = nullptr; }
-  optional<U> search(T key);
+
+  // i understand that returning optional<U>
+  // is probably not the correct choice.
+  // however i do not want to have reference_wrap
+  // nightmare again, so i guess it shall be so.
+  optional<U> search(T key) {
+    auto [lt, mt] = split(root, key);
+    auto [_, rt] = split(mt, key + 1);
+    if (mt && mt->key == key) {
+      T elem = mt->elem;
+      root = merge(merge(lt, mt), rt);
+      return optional{elem};
+    }
+    root = merge(merge(lt, mt), rt);
+    return {};
+  }
   void insert(U elem, T key) {
     auto [t1, t2] = split(root, key);
     NodeT* new_node = new NodeT(key, elem);
@@ -76,16 +86,14 @@ public:
   optional<U> remove(T key) {
     auto [lt, mt] = split(root, key);
     auto [_, rt] = split(mt, key + 1);
+    root = merge(lt, rt);
     if (mt && mt->key == key) {
-      root = merge(lt, rt);
       T elem = mt->elem;
       delete mt;
-      return optional(elem);
+      return optional{elem};
     }
     return {};
   }
-
-  void print() { rec_print(root); }
 
   ~Treap() { rec_delete(root); }
 };

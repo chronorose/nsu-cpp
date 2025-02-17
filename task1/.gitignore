@@ -1,1 +1,10 @@
 out
+CMakeFiles/
+build/
+lib/
+bin/
+_deps/
+*cmake
+test_suite
+CMakeCache.txt
+Testing
