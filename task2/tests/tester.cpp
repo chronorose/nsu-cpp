@@ -1,21 +1,37 @@
-#include "../lines.cpp"
+#include "../lines.hpp"
 #include <gtest/gtest.h>
-#include <optional>
 
-TEST(lines_test, pointEq) {
-  auto p1 = Point(1, 1);
-  auto p2 = Point(1, 1);
-  EXPECT_TRUE(p1 == p2);
+TEST(lines_test, intersection_test) {
+  double a, b, c;
+  const int amount = 20;
+  a = 1;
+  b = 2;
+  c = 3;
+  Line line = Line(a, b, c);
+  for (int i = -amount; i < amount; i++) {
+    Line new_line = Line(a * i, b * i, c * i);
+    auto point = line.intersection(new_line);
+    EXPECT_EQ(point, std::nullopt);
+  }
 }
 
-TEST(lines_test, intersection) {
-  auto l1 = Line(1, 2, 3);
-  auto l2 = Line(2, 4, 6);
-  EXPECT_EQ(nullopt, l1.intersection(l2));
+TEST(lines_test, perpendicular) {
+  Line line{1, 2, 3};
+  Line lineExpected{2, -1, 0};
+  Point p{1, 2};
+  EXPECT_EQ(line.perpendicular(p), lineExpected);
 }
 
-TEST(lines_test, intersection2) {
-  auto l1 = Line(1, 2, 3);
-  auto l2 = Line(2, 5, 6);
-  EXPECT_NE(nullopt, l1.intersection(l2));
+TEST(lines_test, perpendicular2) {
+  Line line{1, 2, 3};
+  Line lineExpected{2, -1, -2};
+  Point p{2, 2};
+  EXPECT_EQ(line.perpendicular(p), lineExpected);
+}
+
+TEST(lines_test, perpendicular3) {
+  Line line{1.5, 2.5, 3.5};
+  Line lineExpected{2.5, -1.5, -11.5};
+  Point p{11.5, 11.5};
+  EXPECT_EQ(line.perpendicular(p), lineExpected);
 }

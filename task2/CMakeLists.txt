@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(lines)
+project(task2)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,15 +15,24 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=leak -fsanitize=address")
+set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fsanitize=leak -fsanitize=address")
+
+# add_compile_options(
+#   -fsanitize=address
+#   -fsanitize=leak
+# )
+
 add_executable(
-  test_suite
+  tests
+  lines.cpp
   tests/tester.cpp
 )
 
 target_link_libraries(
-  test_suite
+  tests
   GTest::gtest_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(test_suite)
+gtest_discover_tests(tests)
