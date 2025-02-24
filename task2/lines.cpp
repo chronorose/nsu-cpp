@@ -15,12 +15,11 @@ std::optional<Point> Line::intersection(Line& ln2) const {
   double det = this->A * ln2.B - ln2.A * this->B;
   if (det == 0) {
     return {};
-  } else {
-    double detdiv = 1. / det;
-    double x = detdiv * ((this->B * ln2.C) - (this->C * ln2.B));
-    double y = detdiv * ((this->C * ln2.A) - (this->A * ln2.C));
-    return Point(x, y);
   }
+  double detdiv = 1. / det;
+  double x = detdiv * ((this->B * ln2.C) - (this->C * ln2.B));
+  double y = detdiv * ((this->C * ln2.A) - (this->A * ln2.C));
+  return Point(x, y);
 }
 
 Line Line::perpendicular(Point& p) const {
@@ -30,8 +29,7 @@ Line Line::perpendicular(Point& p) const {
   double newA = coef * (-1 * this->B);
   double newB = coef * this->A;
   double newC = coef * (this->B * p.x - this->A * p.y);
-  Line ln(newA, newB, newC);
-  return ln;
+  return Line(newA, newB, newC);
 }
 
 bool Line::operator==(const Line& ln) const {
