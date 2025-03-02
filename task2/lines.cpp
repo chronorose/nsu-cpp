@@ -1,18 +1,36 @@
 #include "lines.hpp"
 #include <optional>
 
+/* RE: floating point comparison is tricky
+ * There is almost always incorrect to compare floating point numbers
+ * using bitwise comparison
+ * See my tests
+ */
 bool Point::operator==(const Point& point) const {
   return point.x == this->x && point.y == this->y;
 }
 
+/* RE: invariants and encapsulation
+ * Your line class should have this invariant:
+ * it is represents line in two dimentional space.
+ * And constructors of your class should construct
+ * class where invariant is keeping
+ * But for this constr it is not true
+ *
+ * See my test 
+ */
 Line::Line(Point& p1, Point& p2) {
   this->A = p1.y - p2.y;
   this->B = p2.x - p1.x;
   this->C = p1.x * p2.y - p2.x * p1.y;
 }
 
+/* Note:
+ * I love optionals! They are perfectly suits here!
+ */
 std::optional<Point> Line::intersection(Line& ln2) const {
   double det = this->A * ln2.B - ln2.A * this->B;
+  /* RE: again wrong floating points comparison */
   if (det == 0) {
     return {};
   }
@@ -32,6 +50,7 @@ Line Line::perpendicular(Point& p) const {
   return Line(newA, newB, newC);
 }
 
+/* RE: again wrong floating points comparison */
 bool Line::operator==(const Line& ln) const {
   return this->A == ln.A && this->B == ln.B && this->C == ln.C;
 }
