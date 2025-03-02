@@ -4,6 +4,12 @@
 #include <string>
 #include <unordered_map>
 
+/* Note: about using namespaces in header files
+ * we don't discuss namespaces on lectures, so it is just advice
+ * - avoid of usage 'using' in headers. User, that includes your header
+ * may already have 'string' or 'unordered_map' in his global namespace.
+ * So include your header file will cause name clash and compilation error
+ */
 using std::cout, std::endl;
 using std::unordered_map, std::string;
 
@@ -22,6 +28,7 @@ class Trie {
     auto is_terminal = (word.size() - 1) == current;
     auto current_symbol = word.at(current);
     TrieNode* new_node;
+    // Note: yeah, me too feeling this functional pain..
     // why can't i return new_node from if T_T
     // give me my if expressions, not statements T_T
     if (!node->map.contains(current_symbol)) {
@@ -47,6 +54,13 @@ class Trie {
     return search_(word, new_node, current + 1);
   }
 
+  /* RE: about copying of acc 
+   * Acc is nice, but each recursive call will you use copy constructor of std::string
+   * Maybe we can initialize acc once, and then passing reference to it?
+   *
+   * RE: about compilation
+   * sometimes this methods gives us compilation errors
+   */
   void rec_print(TrieNode* node, string acc) {
     for (auto& it : node->map) {
       rec_print(it.second, acc + it.first);
@@ -63,9 +77,12 @@ class Trie {
     delete node;
   }
 
+  /* RE: About correctness
+   * This methods produces TrieNodes with broken invariants
+   */
   TrieNode* rec_copy(TrieNode* node) {
     auto new_node = new TrieNode();
-    for (auto it : node->map) {
+    for (auto& it : node->map) {
       auto copy_node = rec_copy(it.second);
       new_node->map.insert({it.first, copy_node});
     }
