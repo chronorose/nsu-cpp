@@ -228,3 +228,30 @@ TEST(trie, trie_copy_assignment_same) {
     EXPECT_TRUE(new_trie.search(it));
   }
 }
+
+Trie<char32_t>&& add(Trie<char32_t>&& trie,
+                     vector<basic_string<char32_t>>& vec) {
+  const size_t str_amount = 20;
+  for (size_t i = 0; i < str_amount; i++) {
+    auto str = gen_random_string<char32_t>();
+    vec.push_back(str);
+    trie.insert(str);
+  }
+  return trie;
+}
+
+TEST(trie, trie_move_assignment) {
+  vector<basic_string<char32_t>> vec;
+  auto trie = add(Trie<char32_t>(), vec);
+  for (auto& it : vec) {
+    EXPECT_TRUE(trie.search(it));
+  }
+}
+
+TEST(trie, trie_move_constructor) {
+  vector<basic_string<char32_t>> vec;
+  auto trie(add(Trie<char32_t>(), vec));
+  for (auto& it : vec) {
+    EXPECT_TRUE(trie.search(it));
+  }
+}

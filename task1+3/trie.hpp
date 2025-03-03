@@ -56,6 +56,8 @@ class Trie {
   }
 
   void rec_delete(TrieNode* node) {
+    if (node == nullptr)
+      return;
     for (auto& it : node->map) {
       rec_delete(it.second);
     }
@@ -79,6 +81,18 @@ public:
       return *this;
     rec_delete(root);
     root = rec_copy(other.root);
+    return *this;
+  }
+  Trie(Trie&& other) {
+    root = other.root;
+    other.root = nullptr;
+  }
+  Trie& operator=(Trie&& other) {
+    if (this == &other)
+      return *this;
+    rec_delete(root);
+    root = other.root;
+    other.root = nullptr;
     return *this;
   }
   void insert(std::basic_string<CharT>& word) { ins_(word, root, 0); }
