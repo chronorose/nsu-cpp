@@ -106,7 +106,6 @@ TEST(trie, trie_sort_of_fuzz2) {
     trie.insert(it);
   }
 
-  trie.print();
   for (auto& it : vec) {
     EXPECT_TRUE(trie.search(it));
   }
@@ -144,6 +143,8 @@ TEST(trie, trie_copy_constr_review) {
   for (auto& word : vec) {
     EXPECT_TRUE(new_trie->search(word));
   }
+
+  new_trie->print();
 
   auto trie(*new_trie);
 

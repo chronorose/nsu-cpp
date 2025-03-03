@@ -14,6 +14,20 @@ using std::cout, std::endl;
 using std::unordered_map, std::string;
 
 template <class CharT>
+struct CharInterface {
+    static bool eq(CharT a, CharT b) {
+        exit(1);
+    }
+};
+
+template <>
+struct CharInterface<char> {
+    static bool eq(char a, char b) {
+        return a == b;
+    }
+};
+
+template <class CharT>
 class Trie {
   struct TrieNode {
     unordered_map<CharT, TrieNode*> map;
@@ -54,10 +68,7 @@ class Trie {
     return search_(word, new_node, current + 1);
   }
 
-  /* RE: about copying of acc 
-   * Acc is nice, but each recursive call will you use copy constructor of std::string
-   * Maybe we can initialize acc once, and then passing reference to it?
-   *
+  /*
    * RE: about compilation
    * sometimes this methods gives us compilation errors
    */
