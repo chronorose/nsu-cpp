@@ -103,6 +103,10 @@ class Trie {
 public:
   Trie() : root(new TrieNode()) {}
   Trie(const Trie& other) : root(rec_copy(other.root)) {}
+  /* RE: I forget about Important one
+   * actually operator= shold return value
+   * try to think why it has these constraints
+   */
   Trie& operator=(const Trie& other) {
     if (this == &other)
       return *this;
