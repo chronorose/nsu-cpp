@@ -58,7 +58,7 @@ static Lexeme lex(iter& input, iter& inputEnd) {
     return Lexeme(LexemeType::RParen, lexemeStr);
   } break;
   default:
-    if (isdigit(ch)) {
+    if (isdigit(ch) || ch == '-') {
       return lexInt(input, inputEnd);
     }
     if (isalpha(ch)) {

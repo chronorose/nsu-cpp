@@ -1,1 +1,4 @@
-(function haha (val 3))
+(let F = 
+  (function arg (add (var arg) (val 1))) in
+    (let V = (val 1) in
+    (call (var F) (var V))))

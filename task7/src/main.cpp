@@ -15,13 +15,14 @@ int main(int argc, char* argv[]) {
   std::ostringstream input;
   input << in.rdbuf();
   std::string inputStr = input.str();
-  std::cout << inputStr << std::endl;
   auto lexer = LexerImpl();
   auto parser = ParserImpl();
   try {
     auto lexed = lexer.lex(inputStr);
     auto parsed = parser.parse(lexed);
+    auto env = Env();
     std::cout << parsed->toString() << std::endl;
+    std::cout << parsed->eval(env)->toString() << std::endl;
   } catch (ParserException& exception) {
     std::cout << exception.error_msg << std::endl;
   } catch (LexerException& exception) {
