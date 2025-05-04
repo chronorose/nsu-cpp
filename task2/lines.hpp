@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdlib>
 #include <optional>
 
 struct Point {
@@ -11,14 +12,17 @@ struct Point {
 };
 
 class Line {
+  Line(Point& p1, Point& p2);
+
+  Line(double A, double B, double C) : A(A), B(B), C(C) {}
+
 public:
   double A;
   double B;
   double C;
 
-  Line(Point& p1, Point& p2);
-
-  Line(double A, double B, double C) : A(A), B(B), C(C) {}
+  static std::optional<Line> lineFactory(Point& p1, Point& p2);
+  static std::optional<Line> lineFactory(double A, double B, double C);
 
   std::optional<Point> intersection(Line& ln2) const;
 
