@@ -14,8 +14,8 @@ protected:
   FILE* input;
 
 public:
-  virtual void close() override { open = false; }
-  virtual bool end() override { return feof(input); }
+  void close() override { open = false; }
+  bool end() override { return feof(input); }
 };
 
 class FileReader : virtual public FileIO, virtual public Reader {
@@ -25,7 +25,7 @@ public:
     open = true;
   }
 
-  virtual FileReader& operator>>(std::string& str) {
+  FileReader& operator>>(std::string& str) override {
     if (!open)
       return *this;
     char cholder = fgetc(input);
@@ -38,7 +38,7 @@ public:
     return *this;
   }
 
-  virtual FileReader& operator>>(char& ch) {
+  FileReader& operator>>(char& ch) override {
     if (!open)
       return *this;
     char holder = fgetc(input);
@@ -49,7 +49,7 @@ public:
     return *this;
   }
 
-  virtual FileReader& operator>>(int& i) {
+  FileReader& operator>>(int& i) override {
     if (!open)
       return *this;
     std::string holder;
@@ -71,13 +71,35 @@ public:
     input = fopen(path.c_str(), "w");
     open = true;
   }
-  virtual Writer& operator<<(std::string& str) {
+  Writer& operator<<(std::string& str) {
     if (!open)
       return *this;
 
     auto size = str.size();
 
     fwrite(str.c_str(), size, size, input);
+
+    return *this;
+  }
+
+  Writer& operator<<(int& integer) {
+    if (!open)
+      return *this;
+
+    auto str = std::to_string(integer);
+
+    auto size = str.size();
+
+    fwrite(str.c_str(), size, size, input);
+
+    return *this;
+  }
+
+  Writer& operator<<(char& ch) {
+    if (!open)
+      return *this;
+
+    fputc(ch, input);
 
     return *this;
   }

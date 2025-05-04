@@ -15,15 +15,15 @@ protected:
 
 public:
   StringIO(std::string input) : input(input) { open = true; }
-  virtual void close() override { open = false; }
-  virtual bool end() override { return pos >= input.size(); }
+  void close() override { open = false; }
+  bool end() override { return pos >= input.size(); }
 };
 
 class StringReader : virtual public StringIO, virtual public Reader {
 
 public:
   StringReader(std::string input) : StringIO(input) {}
-  virtual StringReader& operator>>(std::string& str) {
+  StringReader& operator>>(std::string& str) override {
     if (!open)
       return *this;
     while (!end() && std::isspace(input[pos]))
@@ -34,7 +34,7 @@ public:
     return *this;
   }
 
-  virtual StringReader& operator>>(char& ch) {
+  StringReader& operator>>(char& ch) override {
     if (!open)
       return *this;
     while (!end() && !std::isalnum(input[pos]))
@@ -44,7 +44,7 @@ public:
     return *this;
   }
 
-  virtual StringReader& operator>>(int& i) {
+  StringReader& operator>>(int& i) override {
     if (!open)
       return *this;
     std::string holder;
@@ -53,7 +53,10 @@ public:
     while (!end() && std::isdigit(input[pos])) {
       holder += input[pos++];
     }
-    i = std::stoi(holder);
+    if (holder.size() > 0)
+      i = std::stoi(holder);
+    else
+      i = 0;
     return *this;
   }
 };
@@ -63,12 +66,25 @@ class StringWriter : virtual public StringIO, virtual public Writer {
 public:
   StringWriter(std::string input) : StringIO(input) {}
 
-  virtual Writer& operator<<(std::string& str) {
+  Writer& operator<<(std::string& str) override {
     if (!open)
       return *this;
     for (auto&& s : str) {
       input.push_back(s);
     }
+    return *this;
+  }
+  Writer& operator<<(int& integer) override {
+    if (!open)
+      return *this;
+    input += std::to_string(integer);
+    return *this;
+  }
+
+  Writer& operator<<(char& ch) override {
+    if (!open)
+      return *this;
+    input.push_back(ch);
     return *this;
   }
 };
