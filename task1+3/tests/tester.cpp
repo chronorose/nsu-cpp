@@ -65,7 +65,7 @@ static std::mt19937 gen(rd()); // this is 'generator' of pseudo-random numbers
  * for now this function a little bit pointless
  * we need to use type trait concept to write it in right way
  */
-template <class CharT>
+template <Trieable CharT>
 basic_string<CharT> gen_random_string() {
   std::uniform_int_distribution<size_t> len_dist(
       0, 10000); // this things needed to keep uniformity of distr

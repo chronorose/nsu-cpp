@@ -1,19 +1,19 @@
 #pragma once
 
+#include <functional>
 #include <string>
 #include <unordered_map>
 
-template <class CharT>
-struct CharInterface {
-  static bool eq(CharT a, CharT b) { exit(1); }
-};
+template <typename CharT>
+concept Hashable = requires { std::hash<CharT>{}; };
 
-template <>
-struct CharInterface<char> {
-  static bool eq(char a, char b) { return a == b; }
-};
+template <typename CharT>
+concept BasicStringable = requires { std::basic_string<CharT>{}; };
 
-template <class CharT>
+template <typename CharT>
+concept Trieable = Hashable<CharT> && BasicStringable<CharT>;
+
+template <Trieable CharT>
 class Trie {
   struct TrieNode {
     // still have to fix this
