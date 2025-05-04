@@ -103,3 +103,19 @@ TEST(matrix, cast) {
   double casted = (double)m;
   EXPECT_EQ(casted, 10);
 }
+
+TEST(matrix, cast2) {
+  vector<double> vec{1.0, 2.0, 3.0, 4.0};
+  SqMatrix m(vec);
+  double casted = (double)m;
+  SqMatrix testMatrix = m + vec;
+  EXPECT_EQ(casted, 10);
+}
+
+TEST(review, reviewTest1) {
+  vector<double> vec{1.0, 2.0, 3.0, 4.0};
+  SqMatrix m(vec);
+  SqMatrix testMatrix = m + vec;
+  SqMatrix testMatrix2 = vec + m;
+  EXPECT_EQ(testMatrix, testMatrix2);
+}
