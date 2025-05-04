@@ -19,6 +19,7 @@ public:
 struct TestObject {
   DestructorTest& dt;
   TestObject(DestructorTest& dt) : dt(dt) {}
+  TestObject(const TestObject& other) = default;
   ~TestObject() { dt.destruction(); }
 };
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <concepts>
 #include <utility>
 template <typename T>
 class UniqueScopedPtr {
@@ -15,12 +16,13 @@ public:
     return *this;
   }
   T& get() { return *ptr; }
+  T* operator->() { return ptr; }
+  T& operator*() { return get(); }
   const T& get() const { return *ptr; }
   ~UniqueScopedPtr() { delete ptr; }
 };
 
-// ideally we would need to check that T is deep-copyable here
-template <typename T>
+template <std::copy_constructible T>
 class DCScopedPtr {
   T* ptr = nullptr;
 
@@ -34,13 +36,14 @@ public:
     ptr = new T(*other.ptr);
     return *this;
   }
-  // not really sure about move constructors...
   DCScopedPtr(DCScopedPtr&& other) { std::swap(ptr, other.ptr); }
   DCScopedPtr& operator=(DCScopedPtr&& other) {
     std::swap(ptr, other.ptr);
     return *this;
   }
   T& get() { return *ptr; }
+  T* operator->() { return ptr; }
+  T& operator*() { return get(); }
   const T& get() const { return *ptr; }
   ~DCScopedPtr() { delete ptr; }
 };
