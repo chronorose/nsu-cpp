@@ -7,7 +7,7 @@
 
 using namespace std;
 
-TEST(primes, first) { ASSERT_EQ(Prime<0>{}, 2); }
-TEST(primes, second) { ASSERT_EQ(Prime<1>{}, 3); }
-TEST(primes, third) { ASSERT_EQ(Prime<2>{}, 5); }
-TEST(primes, fifth) { ASSERT_EQ(Prime<5>{}, 13); }
+TEST(primes, first) { ASSERT_EQ(Prime<1>{}, 2); }
+TEST(primes, second) { ASSERT_EQ(Prime<2>{}, 3); }
+TEST(primes, third) { ASSERT_EQ(Prime<3>{}, 5); }
+TEST(primes, fifth) { ASSERT_EQ(Prime<6>{}, 13); }
