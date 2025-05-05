@@ -18,6 +18,11 @@ TEST(limiter, test1) {
   ASSERT_THROW(HelloKitty(), logic_error);
 }
 
+TEST(limiter, boundedNumberOfCopiedCats) {
+  HelloKitty original_cat;
+  ASSERT_THROW(HelloKitty copied_cat{original_cat}, logic_error);
+}
+
 TEST(limiter, test2) {
   TwoMeows* tm = new TwoMeows{};
   TwoMeows* tm2 = new TwoMeows{};

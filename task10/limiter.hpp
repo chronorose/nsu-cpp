@@ -10,13 +10,17 @@ class Limiter {
   // pretty cursed if you think about it. like, how does inline matter
   // there???
 
-public:
-  Limiter() {
+  void ctr() {
     if (objs >= Limit) {
       throw std::logic_error("oopsie daisy");
     }
     ++objs;
   }
+
+public:
+  Limiter() { ctr(); }
+
+  Limiter(const Limiter& other) { ctr(); }
 
   ~Limiter() { --objs; }
 };
